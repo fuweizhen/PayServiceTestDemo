@@ -13,12 +13,14 @@ import android.widget.Button;
 
 import com.newland.aidl.deviceInfo.AidlDeviceInfo;
 import com.newland.aidl.deviceService.AidlDeviceService;
+import com.newland.aidl.led.AidlLED;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private AidlDeviceService serviceManager;
     private AidlDeviceInfo deviceInfo;
+    private AidlLED aidlLED;
     private Button btonclick;
     private Button bttest;
 
@@ -44,6 +46,12 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("tag",deviceInfo.getCSN());
                     }else {
                         Log.d(getClass().getSimpleName(),"deviceInfo==null");
+                    }
+                    aidlLED = AidlLED.Stub.asInterface(serviceManager.getLed());
+                    if (aidlLED != null){
+                        aidlLED.ledOperation(4,3,-1);
+                    }else {
+                        Log.d(getClass().getSimpleName(),"aidlLED==null");
                     }
                 }catch (Exception e){
                     e.printStackTrace();
