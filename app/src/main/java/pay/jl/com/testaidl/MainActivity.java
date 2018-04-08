@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,8 @@ import android.widget.Button;
 import com.newland.aidl.deviceInfo.AidlDeviceInfo;
 import com.newland.aidl.deviceService.AidlDeviceService;
 import com.newland.aidl.led.AidlLED;
+import com.newland.aidl.printer.AidlPrinter;
+import com.newland.aidl.printer.AidlPrinterListener;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -21,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private AidlDeviceService serviceManager;
     private AidlDeviceInfo deviceInfo;
     private AidlLED aidlLED;
+    private AidlPrinter aidlPrinter;
     private Button btonclick;
     private Button bttest;
 
@@ -52,6 +56,24 @@ public class MainActivity extends AppCompatActivity {
                         aidlLED.ledOperation(4,3,-1);
                     }else {
                         Log.d(getClass().getSimpleName(),"aidlLED==null");
+                    }
+                    aidlPrinter = AidlPrinter.Stub.asInterface(serviceManager.getPrinter());
+                    if (aidlPrinter != null){
+                        //aidlPrinter.addText(null,"cccccccccccccccccccc我我我我");
+                        //aidlPrinter.addQrCode(null,"ccccvvvbbb");
+                        aidlPrinter.addBarCode(null,"123456");
+                        aidlPrinter.startPrinter(new AidlPrinterListener.Stub() {
+                            @Override
+                            public void onError(int code, String detail) throws RemoteException {
+
+                            }
+
+                            @Override
+                            public void onFinish() throws RemoteException {
+
+                            }
+
+                        });
                     }
                 }catch (Exception e){
                     e.printStackTrace();
